@@ -1,0 +1,33 @@
+{
+  "name": "wds-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "main site",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "build-js": "./node_modules/.bin/babel web/widgets/chat-text/scripts/*.js --out-dir=web/build",    
+    "watch-js": "nodemon -i web/build -x \"npm run build-js\"",
+    "build":"npm run build-js",
+    "watch":"npm run watch-js"
+  },
+  "author": "sam fiorito",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "express-handlebars": "^3.0.0",
+    "socket.io": "^1.4.6"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "es2015"
+    ]
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0"
+  }
+}

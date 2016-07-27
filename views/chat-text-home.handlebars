@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chat Text Widget</title>
+    <link rel="stylesheet" href="/widgets/chat-text/css/base.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.16/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <div id="msg"></div>
+    <div id="content"></div>
+    <div id="scroll" class="scroll"></div>
+    <script src="/build/web/widgets/chat-text/scripts/widget.js"></script>
+    <script src="/build/web/widgets/chat-text/scripts/comment-box.js"></script>
+    {{#if agent}}
+      <script src="/build/web/widgets/chat-text/scripts/agent-comment-box.js"></script>
+      <script>
+        ReactDOM.render(React.createElement(React.createClass(createAgentCommentBox()), { url: '/api/comments' }), document.getElementById('content'));
+      </script>
+    {{/if}}
+    
+    {{#if guest}}
+    <script>      
+        ReactDOM.render(React.createElement(React.createClass(createCommentBox()), { url: '/api/comments' }), document.getElementById('content'));
+    </script>    
+    {{/if}} 
+  </body>
+</html>
