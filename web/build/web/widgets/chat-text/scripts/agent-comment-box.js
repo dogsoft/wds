@@ -10,6 +10,20 @@ function createAgentCommentBox() {
     return { initUrl: '/api/init-chat/agent', commentClass: 'commentAgent' };
   };
 
+  commentBox.componentDidMount = function () {
+    alert('componentDidMount');
+    var schat = io.connect('http://localhost:3000/start-chat');
+    schat.on('message', this.startChat);
+  };
+
+  commentBox.componentWillUnmount = function () {
+    alert('componentWillUnmount');
+  };
+
+  commentBox.startChat = function () {
+    alert('startChat');
+  };
+
   commentBox.initChatSubmit = function (comment) {
     $.ajax({
       url: this.props.initUrl,
@@ -19,8 +33,6 @@ function createAgentCommentBox() {
       success: function (we) {
         this.setState(we);
         initAgentWS.call(this);
-        //var chat = io.connect('http://localhost:3000/chat');
-        //chat.on( 'message', this.loadCommentsFromServer);      
       }.bind(this),
       error: function (xhr, status, err) {
         this.setState({ data: [] });
