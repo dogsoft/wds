@@ -1,0 +1,19 @@
+<html>
+<head>
+<script src="/socket.io/socket.io.js"></script>	
+<script>
+  var test = io.connect('http://localhost:3000/test')
+  
+  test.on('connect', function () {
+    
+    test.emit('msg','hi!');
+  });
+
+  test.on('msg', function (m) { document.getElementById("content").innerHTML = m});   
+  
+</script>
+</head>
+<body>
+<div id="content">Hello</div>
+</body>
+</html>

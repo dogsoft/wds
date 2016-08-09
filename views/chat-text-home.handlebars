@@ -20,13 +20,13 @@
     {{#if agent}}
       <script src="/build/web/widgets/chat-text/scripts/agent-comment-box.js"></script>
       <script>
-        ReactDOM.render(React.createElement(React.createClass(createAgentCommentBox()), { url: '/api/comments' }), document.getElementById('content'));
+        ReactDOM.render(React.createElement(React.createClass(createAgentCommentBox())), document.getElementById('content'));
       </script>
     {{/if}}
     
     {{#if guest}}
     <script>      
-        ReactDOM.render(React.createElement(React.createClass(createCommentBox()), { url: '/api/comments' }), document.getElementById('content'));
+        ReactDOM.render(React.createElement(React.createClass(createCommentBox())), document.getElementById('content'));
     </script>    
     {{/if}} 
   </body>

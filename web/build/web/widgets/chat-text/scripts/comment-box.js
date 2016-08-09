@@ -1,11 +1,12 @@
 'use strict';
 
 function createCommentBox() {
+  var chat = null;
   var commentBox = {
     getDefaultProps: function getDefaultProps() {
       return { initUrl: '/api/init-chat/guest', commentClass: 'comment' };
     },
-    loadCommentsFromServer: function loadCommentsFromServer(comment) {
+    addComment: function addComment(comment) {
       //alert(JSON.stringify(comment));
       var comments = this.state.data;
       var newComments = comments.concat(comment.data);
@@ -14,19 +15,7 @@ function createCommentBox() {
     },
     handleCommentSubmit: function handleCommentSubmit(comment) {
       comment.type = this.props.commentClass;
-      $.ajax({
-        url: this.props.url,
-        dataType: 'text',
-        type: 'POST',
-        data: comment,
-        success: function (data) {
-          //this.setState({data: newComments}); server places on websocket
-        }.bind(this),
-        error: function (xhr, status, err) {
-          this.setState({ data: comments });
-          console.error(this.props.url, status, err.toString());
-        }.bind(this)
-      });
+      chat.emit('message', comment);
     },
     initChatSubmit: function initChatSubmit(comment) {
       comment.type = this.props.commentClass;
@@ -38,8 +27,8 @@ function createCommentBox() {
         data: comment,
         success: function (we) {
           this.setState(we);
-          var chat = io.connect('http://localhost:3000/chat');
-          chat.on('message', this.loadCommentsFromServer);
+          chat = io.connect('http://localhost:3000/chat');
+          chat.on('message', this.addComment);
         }.bind(this),
         error: function (xhr, status, err) {
           this.setState({ data: [] });

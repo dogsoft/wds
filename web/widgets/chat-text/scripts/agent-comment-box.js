@@ -1,5 +1,6 @@
       function createAgentCommentBox()
       {        
+        var agentChat = null;
         var commentBox = createCommentBox();
         commentBox.getInitialState = function() {
             return { data: [], ready:false, spinner:false};
@@ -10,19 +11,14 @@
         }    
 
         commentBox.componentDidMount = function() {
-          alert('componentDidMount');
-          var schat = io.connect('http://localhost:3000/start-chat');
-          schat.on('message', this.startChat);
+          agentChat = io.connect('http://localhost:3000/chat');
+          agentChat.on( 'message', this.addComment);    
         }       
 
         commentBox.componentWillUnmount = function() {
           alert('componentWillUnmount');
         }
         
-        commentBox.startChat = function() {
-          alert('startChat');
-        }
-
         commentBox.initChatSubmit = function(comment) {
             $.ajax({
               url: this.props.initUrl,
@@ -30,8 +26,7 @@
               type: 'POST',
               data: comment,
               success: function(we) {
-                this.setState(we);       
-                initAgentWS.call(this);        
+                this.setState(we);                    
               }.bind(this),
               error: function(xhr, status, err) {
                 this.setState({data: []});
@@ -39,11 +34,16 @@
               }.bind(this)
             });
         }
-        return commentBox;
-      }     
 
-      function initAgentWS()
-      {
-        var chat = io.connect('http://localhost:3000/chat');
-        chat.on( 'message', this.loadCommentsFromServer);          
-      } 
+        commentBox.handleCommentSubmit = function(comment) {
+          comment.type=this.props.commentClass; 
+          agentChat.emit('message', comment);
+        }
+
+        commentBox.getCommentFormElement = function ()
+        {
+          return <CommentForm onCommentSubmit={this.handleCommentSubmit} submitButtonText="Send"/>;
+        }        
+
+        return commentBox;
+      }

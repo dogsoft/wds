@@ -24,4 +24,15 @@ require('./lib/chat-text-routes.js')(app,io);
 
 server.listen(port, function () {
   console.log('WDS listening on port ' + port);
+
+
+//test socket io
+/*var test = io.of("/test");
+ test.on('connection', function (socket) {
+  	socket.on('msg', function (msg) {
+    console.log('I received a private message by saying ', msg);
+    test.emit('msg',msg + ' Im a server beeatch');
+  });
+  });*/
+
 });
