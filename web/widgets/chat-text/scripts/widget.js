@@ -8,7 +8,7 @@
         return React.createClass({
           render: function() {
             return (  
-                <div className={this.props.show ? '' : 'hideMe' }>
+                <div className={this.props.status === 'wait' ? '' : 'hideMe' }>
                   <img src={this.props.imgSrc} className="valign" />
                   <span className="valign">Fetching Your Agent ...</span> 
                 </div>          

@@ -20,6 +20,8 @@
     {{#if agent}}
       <script src="/build/web/widgets/chat-text/scripts/agent-comment-box.js"></script>
       <script>
+        //var unmount = ReactDOM.unmountComponentAtNode(document.getElementById('content'));
+        //console.log('unmount ' + unmount); 
         ReactDOM.render(React.createElement(React.createClass(createAgentCommentBox())), document.getElementById('content'));
       </script>
     {{/if}}

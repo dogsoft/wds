@@ -19,16 +19,16 @@ function createCommentBox() {
     },
     initChatSubmit: function initChatSubmit(comment) {
       comment.type = this.props.commentClass;
-      this.setState({ spinner: true });
+      this.setState({ status: 'wait' });
       $.ajax({
         url: this.props.initUrl,
         dataType: 'json',
         type: 'POST',
         data: comment,
         success: function (we) {
-          this.setState(we);
-          chat = io.connect('http://localhost:3000/chat');
+          chat = io.connect('http://localhost:3000/chat/1');
           chat.on('message', this.addComment);
+          this.setState({ status: 'ready' });
         }.bind(this),
         error: function (xhr, status, err) {
           this.setState({ data: [] });
@@ -37,17 +37,19 @@ function createCommentBox() {
       });
     },
     getInitialState: function getInitialState() {
-      return { data: [], spinner: false };
+      return { data: [], status: 'init' };
     },
     componentDidMount: function componentDidMount() {
-      //nothing
+      //alert('componentDidMount');
     },
-    getCommentFormElement: function getCommentFormElement() {
-      var commentForm = React.createElement(CommentForm, { onCommentSubmit: this.initChatSubmit, submitButtonText: 'Start Chat' });
-      if (this.state.ready) commentForm = React.createElement(CommentForm, { onCommentSubmit: this.handleCommentSubmit, submitButtonText: 'Send' });
-      return commentForm;
+    componentWillUnmount: function componentWillUnmount() {
+      //alert('componentWillUnmount');
+    },
+    renderCommentForm: function renderCommentForm() {
+      if (this.state.status === 'init') return React.createElement(CommentForm, { onCommentSubmit: this.initChatSubmit, submitButtonText: 'Start Chat' });else if (this.state.status === 'ready') return React.createElement(CommentForm, { onCommentSubmit: this.handleCommentSubmit, submitButtonText: 'Send' });
     },
     render: function render() {
+      var commentForm = this.renderCommentForm();
       return React.createElement(
         'div',
         { className: 'commentBox' },
@@ -59,12 +61,13 @@ function createCommentBox() {
         React.createElement(CommentList, { data: this.state.data }),
         React.createElement(
           'div',
-          { className: this.state.spinner ? 'hideMe' : '' },
-          this.getCommentFormElement()
+          null,
+          commentForm
         ),
-        React.createElement(Spinner, { imgSrc: '/img/dog-running.gif', show: this.state.spinner })
+        React.createElement(Spinner, { imgSrc: '/img/dog-running.gif', status: this.state.status })
       );
     }
   };
+
   return commentBox;
 }

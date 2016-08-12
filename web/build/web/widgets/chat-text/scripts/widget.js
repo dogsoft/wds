@@ -10,7 +10,7 @@ function createSpinner() {
     render: function render() {
       return React.createElement(
         'div',
-        { className: this.props.show ? '' : 'hideMe' },
+        { className: this.props.status === 'wait' ? '' : 'hideMe' },
         React.createElement('img', { src: this.props.imgSrc, className: 'valign' }),
         React.createElement(
           'span',

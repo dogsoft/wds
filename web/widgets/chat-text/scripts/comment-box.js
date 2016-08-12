@@ -18,16 +18,16 @@
           },        
           initChatSubmit: function(comment) {
             comment.type=this.props.commentClass;          
-            this.setState({spinner: true});
+            this.setState({status: 'wait'});
             $.ajax({
               url: this.props.initUrl,
               dataType: 'json',
               type: 'POST',
               data: comment,
               success: function(we) {
-                this.setState(we);
-                chat = io.connect('http://localhost:3000/chat');
-                chat.on( 'message', this.addComment);    
+                chat = io.connect('http://localhost:3000/chat/1');
+                chat.on( 'message', this.addComment);  
+                this.setState({status:'ready'});
               }.bind(this),
               error: function(xhr, status, err) {
                 this.setState({data: []});
@@ -36,28 +36,32 @@
             });
           },
           getInitialState: function() {
-            return { data: [], spinner: false};
+            return { data: [], status: 'init'};
           },
           componentDidMount: function() {
-          //nothing
+            //alert('componentDidMount');
           },
-          getCommentFormElement: function ()
-          {
-              var commentForm = <CommentForm onCommentSubmit={this.initChatSubmit} submitButtonText="Start Chat"/>
-              if(this.state.ready)
-                commentForm = <CommentForm onCommentSubmit={this.handleCommentSubmit} submitButtonText="Send"/>
-              return commentForm;
+          componentWillUnmount: function() {
+            //alert('componentWillUnmount');
+          },
+          renderCommentForm: function () {            
+            if(this.state.status === 'init')
+              return  <CommentForm onCommentSubmit={this.initChatSubmit} submitButtonText="Start Chat"/>
+            else if(this.state.status === 'ready')
+              return <CommentForm onCommentSubmit={this.handleCommentSubmit} submitButtonText="Send"/>
           },
           render : function () {                        
+            var commentForm = this.renderCommentForm();        
             return (
               <div className="commentBox">
                 <h1>Comments</h1>
-                <CommentList data={this.state.data}/>
-                <div className={this.state.spinner ? 'hideMe' : ''}>{this.getCommentFormElement()}</div> 
-                <Spinner imgSrc="/img/dog-running.gif" show={this.state.spinner}/>
+                <CommentList data={this.state.data}/>                
+                <div>{commentForm}</div>
+                <Spinner imgSrc="/img/dog-running.gif" status={this.state.status}/>
               </div>
             );
           }
         };
+
         return commentBox;       
-      }      
+      }    
